@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ search.title }} · Nadlan Balagan{% endblock %}
+{% block body %}
+  <h2>{{ search.title }}</h2>
+  <p class="muted">Gush {{ search.gush_from }}–{{ search.gush_to }} · <span dir="rtl">{{ search.property_type }} / {{ search.transaction_type }}</span> · {{ search.period }}</p>
+  {% if latest and latest.status != 'success' %}<div class="card error">Latest attempt: {{ latest.status }} · {{ latest.error or 'See log' }}</div>{% endif %}
+  {% if success %}
+    <div class="card"><p>{{ success.row_count }} records · {{ success.page_count }} page(s) · fetched {{ success.finished_at }}</p>
+      <a href="{{ url_for('download', search_id=search.id) }}">Download CSV</a></div>
+    {% if rows %}<div class="table-wrap"><table dir="rtl"><thead><tr>{% for column in columns %}<th>{{ column }}</th>{% endfor %}</tr></thead>
+      <tbody>{% for row in rows %}<tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+    {% else %}<div class="card">The site returned no records.</div>{% endif %}
+  {% else %}<div class="card">No successful results yet.</div>{% endif %}
+{% endblock %}

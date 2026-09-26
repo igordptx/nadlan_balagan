@@ -1,0 +1,13 @@
+id = "gush-30303"
+title = "Apartments in gush 30303"
+enabled = true
+
+[location]
+kind = "gush_range"
+from = 30303
+to = 30303
+
+[filters]
+property_type = "דירת מגורים"
+transaction_type = "הכל"
+period = "last_12_months"

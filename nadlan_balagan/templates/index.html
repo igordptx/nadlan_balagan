@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block refresh %}<meta http-equiv="refresh" content="15">{% endblock %}
+{% block body %}
+  <div class="card">
+    <div class="row">
+      <form action="{{ url_for('run') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit" {% if status.pending %}disabled{% endif %}>Run all now</button>
+      </form>
+      {% if status.current %}<span>Running: <strong>{{ status.current.search_id }}</strong></span>
+      {% elif status.pending %}<span>Batch queued</span>
+      {% else %}<span class="muted">Idle · next scheduled run: 08:00 UTC</span>{% endif %}
+    </div>
+  </div>
+  {% for error in errors %}<div class="card error">Configuration error: {{ error }}</div>{% endfor %}
+  {% if not cards %}<div class="card">No search files found in <code>searches/</code>.</div>{% endif %}
+  {% for card in cards %}
+    <section class="card">
+      <h2><a href="{{ url_for('detail', search_id=card.search.id) }}">{{ card.search.title }}</a></h2>
+      <p class="muted">{{ card.search.id }} · gush {{ card.search.gush_from }}–{{ card.search.gush_to }} ·
+        <span dir="rtl">{{ card.search.property_type }} / {{ card.search.transaction_type }}</span> · {{ card.search.period }}
+        {% if not card.search.enabled %}· disabled{% endif %}</p>
+      {% if card.success %}
+        <p class="good">Latest successful result: {{ card.success.row_count }} records · {{ card.success.page_count }} page(s) · {{ card.success.finished_at }}</p>
+        <a href="{{ url_for('download', search_id=card.search.id) }}">Download CSV</a>
+      {% else %}<p class="muted">No successful results yet.</p>{% endif %}
+      {% if card.latest and card.latest.status != 'success' %}
+        <p class="error">Latest attempt: {{ card.latest.status }} · {{ card.latest.error or 'See log' }}</p>
+      {% endif %}
+      <form action="{{ url_for('run') }}" method="post" style="margin-top: 1rem">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="search_id" value="{{ card.search.id }}">
+        <button type="submit" {% if status.pending or not card.search.enabled %}disabled{% endif %}>Run this search</button>
+      </form>
+    </section>
+  {% endfor %}
+  <section class="card"><h2>Recent batches</h2>
+    {% if batches %}<div class="table-wrap"><table><thead><tr><th>Started</th><th>Trigger</th><th>Status</th><th>Scheduled day</th></tr></thead>
+    <tbody>{% for batch in batches %}<tr><td>{{ batch.created_at }}</td><td>{{ batch.trigger }}</td><td>{{ batch.status }}</td><td>{{ batch.scheduled_date or '—' }}</td></tr>{% endfor %}</tbody></table></div>
+    {% else %}<p class="muted">No runs yet.</p>{% endif %}
+  </section>
+{% endblock %}

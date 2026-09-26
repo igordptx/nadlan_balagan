@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nadlan-balagan"
+version = "0.1.0"
+description = "Local scheduled searches for Israel Tax Authority real-estate transactions"
+requires-python = ">=3.11"
+dependencies = [
+  "beautifulsoup4>=4.12,<5",
+  "Flask>=3.0,<4",
+  "Pillow>=10,<12",
+  "playwright>=1.50,<2",
+  "waitress>=3.0,<4",
+]
+
+[project.scripts]
+nadlan-balagan = "nadlan_balagan.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["nadlan_balagan*"]
+
+[tool.setuptools.package-data]
+nadlan_balagan = ["templates/*.html"]

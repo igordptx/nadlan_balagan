@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block refresh %}{% endblock %}
+  <title>{% block title %}Nadlan Balagan{% endblock %}</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; }
+    body { margin: 0 auto; padding: 1.5rem; max-width: 1100px; color: #182331; background: #f6f8fa; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    h1 { margin: .2rem 0 1rem; } h2 { margin-bottom: .5rem; }
+    a { color: #075c9f; } .card { background: white; border: 1px solid #dce2e8; border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; }
+    .muted { color: #566574; } .error { color: #a32222; } .good { color: #17633a; }
+    button { background: #075c9f; border: 0; border-radius: 6px; color: white; padding: .6rem .9rem; cursor: pointer; font: inherit; }
+    button:hover { background: #044576; } button:disabled { background: #8d9aa6; cursor: default; }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+    .table-wrap { overflow-x: auto; } table { border-collapse: collapse; width: 100%; background: white; }
+    th, td { border-bottom: 1px solid #e1e5e9; padding: .55rem .7rem; text-align: start; white-space: nowrap; }
+    th { background: #edf3f8; } pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <header><h1><a href="{{ url_for('index') }}">Nadlan Balagan</a></h1><span class="muted">Times shown in UTC</span></header>
+  {% block body %}{% endblock %}
+</body>
+</html>
