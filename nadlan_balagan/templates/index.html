@@ -12,16 +12,44 @@
       {% else %}<span class="muted">Idle · next scheduled run: 08:00 UTC</span>{% endif %}
     </div>
   </div>
+  <section class="card">
+    <h2>What can I search?</h2>
+    <p>Create one <code>.toml</code> file per search in the project's <code>searches/</code> folder. Copy <code>gush_30303.toml</code>, give the copy a unique <code>id</code> and a descriptive <code>title</code>, then set its filters. The files are read before each run; there is no need to restart the app after editing them.</p>
+    <ul>
+      <li><strong>Location:</strong> a range of gush (block) numbers. Use the same number for <code>from</code> and <code>to</code> to search one gush.</li>
+      <li><strong>Property and transaction:</strong> use the site's Hebrew dropdown labels, such as <span dir="rtl">דירת מגורים</span> and <span dir="rtl">הכל</span>. Transaction choices depend on the property type; a label the site does not offer causes a clear search error.</li>
+      <li><strong>Period:</strong> the last 3, 6, 12, or 36 months. These are rolling windows calculated by the site when each search runs.</li>
+      <li><strong>Multiple searches:</strong> add more files; enabled searches run one by one each day at 08:00 UTC. Set <code>enabled = false</code> to keep a search without running it.</li>
+    </ul>
+    <details>
+      <summary>Example search file</summary>
+      <pre>id = "gush-30303"
+title = "Apartments in gush 30303"
+enabled = true
+
+[location]
+kind = "gush_range"
+from = 30303
+to = 30303
+
+[filters]
+property_type = "דירת מגורים"
+transaction_type = "הכל"
+period = "last_12_months"</pre>
+    </details>
+    <p class="muted">Available period values: <code>last_3_months</code>, <code>last_6_months</code>, <code>last_12_months</code>, <code>last_36_months</code>. City autocomplete, individual parcel searches, and custom date ranges are not supported yet. Searches are configured in files, not in this page.</p>
+  </section>
   {% for error in errors %}<div class="card error">Configuration error: {{ error }}</div>{% endfor %}
   {% if not cards %}<div class="card">No search files found in <code>searches/</code>.</div>{% endif %}
   {% for card in cards %}
     <section class="card">
       <h2><a href="{{ url_for('detail', search_id=card.search.id) }}">{{ card.search.title }}</a></h2>
       <p class="muted">{{ card.search.id }} · gush {{ card.search.gush_from }}–{{ card.search.gush_to }} ·
-        <span dir="rtl">{{ card.search.property_type }} / {{ card.search.transaction_type }}</span> · {{ card.search.period }}
+        <span dir="rtl">{{ card.search.property_type }} / {{ card.search.transaction_type }}</span> · <span dir="rtl">{{ card.period_label }}</span>
         {% if not card.search.enabled %}· disabled{% endif %}</p>
       {% if card.success %}
         <p class="good">Latest successful result: {{ card.success.row_count }} records · {{ card.success.page_count }} page(s) · {{ card.success.finished_at }}</p>
+        <a href="{{ url_for('detail', search_id=card.search.id) }}">View latest results</a> ·
         <a href="{{ url_for('download', search_id=card.search.id) }}">Download CSV</a>
       {% else %}<p class="muted">No successful results yet.</p>{% endif %}
       {% if card.latest and card.latest.status != 'success' %}

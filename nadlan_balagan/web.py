@@ -6,7 +6,7 @@ import secrets
 
 from flask import Flask, abort, jsonify, redirect, render_template, request, send_file, url_for
 
-from .config import DATA_DIR, load_searches
+from .config import DATA_DIR, PERIOD_LABELS, load_searches
 from .service import Service
 
 
@@ -21,6 +21,7 @@ def create_app(service: Service) -> Flask:
         for search in searches.values():
             cards.append({
                 "search": search,
+                "period_label": PERIOD_LABELS[search.period],
                 "latest": service.storage.latest(search.id),
                 "success": service.storage.latest(search.id, "success"),
             })

@@ -49,7 +49,21 @@ transaction_type = "הכל"
 period = "last_12_months"
 ```
 
-`period` may be `last_3_months`, `last_6_months`, `last_12_months`, or `last_36_months`. The property and transaction types must match options currently offered by the site. The initial release supports gush ranges and these preset periods; it does not yet automate city autocomplete or custom date fields. Files are reloaded before each batch, so editing a search does not require restarting the server. Invalid files are shown on the dashboard and do not prevent other valid searches from running.
+Each field has a specific role:
+
+| Field | What it controls |
+| --- | --- |
+| `id` | A unique, stable identifier for the search. Use lowercase letters, digits, hyphens, or underscores. Results remain associated with this ID even if you change `title`. |
+| `title` | The name displayed on the dashboard. |
+| `enabled` | Set `false` to keep the file without running it daily or through the dashboard. |
+| `location.from`, `location.to` | Starting and ending gush numbers. Set them equal for one gush, or use a range. |
+| `property_type` | The exact Hebrew label offered in the site's property dropdown; `דירת מגורים` is the verified example. |
+| `transaction_type` | The exact label offered after choosing the property type; `הכל` is the verified example. Available choices can depend on `property_type`. |
+| `period` | A rolling date window: `last_3_months`, `last_6_months`, `last_12_months`, or `last_36_months`. The site calculates dates at the time of each run. |
+
+To add another search, copy the example to a new `.toml` file, change its `id`, and adjust the filters. Filenames may differ from IDs. For example, you can keep one file for gush 30303 over 12 months and another with a different ID and `period = "last_36_months"` to compare a longer window. Every enabled file is a separate search, run sequentially with the delay in `settings.toml`.
+
+The initial release supports gush ranges and preset periods. It does not yet automate city autocomplete, parcel-specific searches, or custom start/end dates. Search files are reloaded before each batch, so editing a search does not require restarting the server. Invalid files are shown on the dashboard and do not prevent other valid searches from running. If the site does not offer a configured property or transaction label, that search fails with an error shown on the dashboard; other searches continue.
 
 `settings.toml` sets the local port, delay between searches (default three seconds), headless mode, OCR attempt limit, and maximum result pages. The dashboard is deliberately bound to `127.0.0.1`; it is not accessible from other machines without additional networking configuration.
 
