@@ -1,4 +1,4 @@
-port = 9999
+port = 7777
 delay_seconds = 3
 headless = true
 max_captcha_attempts = 8

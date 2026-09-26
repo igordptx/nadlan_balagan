@@ -31,7 +31,7 @@ class SearchConfig:
 
 @dataclass(frozen=True)
 class Settings:
-    port: int = 9999
+    port: int = 7777
     delay_seconds: float = 3.0
     headless: bool = True
     max_captcha_attempts: int = 8
@@ -103,7 +103,7 @@ def load_settings(path: Path = ROOT / "settings.toml") -> Settings:
         return Settings()
     with path.open("rb") as file:
         data = tomllib.load(file)
-    port = _integer(data.get("port", 9999), "port", 1, 65535)
+    port = _integer(data.get("port", 7777), "port", 1, 65535)
     delay = data.get("delay_seconds", 3)
     if isinstance(delay, bool) or not isinstance(delay, (int, float)) or not 0 <= delay <= 300:
         raise ValueError("delay_seconds must be a number from 0 to 300")

@@ -1,6 +1,6 @@
 # Nadlan Balagan
 
-Nadlan Balagan runs saved searches on the Israel Tax Authority real-estate site, shows the latest results at **http://127.0.0.1:9999**, and schedules enabled searches for **08:00 UTC every day**. It uses Chromium through Playwright and Tesseract OCR to handle the site's four-digit image challenge.
+Nadlan Balagan runs saved searches on the Israel Tax Authority real-estate site, shows the latest results at **http://127.0.0.1:7777**, and schedules enabled searches for **08:00 UTC every day**. It uses Chromium through Playwright and Tesseract OCR to handle the site's four-digit image challenge.
 
 The application supports Python 3.11+ on Windows and Linux. The setup scripts put the Python environment in `.venv/` and Chromium in `.browsers/`. Search results, the SQLite database, service logs, and generated service-unit files live in `data/`. These directories are excluded from Git. Tesseract is an operating-system dependency installed by the setup script; it is not bundled in this repository.
 
@@ -53,7 +53,7 @@ period = "last_12_months"
 
 `settings.toml` sets the local port, delay between searches (default three seconds), headless mode, OCR attempt limit, and maximum result pages. The dashboard is deliberately bound to `127.0.0.1`; it is not accessible from other machines without additional networking configuration.
 
-If port 9999 is occupied, change `settings.toml` or use `python -m nadlan_balagan serve --port 10000` for that run. Startup checks the port before queueing a scheduled search.
+If port 7777 is occupied, change `settings.toml` or use `python -m nadlan_balagan serve --port 10000` for that run. Startup checks the port before queueing a scheduled search.
 
 ## Runs and results
 
